@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:http="http://www.mulesoft.org/schema/mule/http" xmlns="http://www.mulesoft.org/schema/mule/core"
+	xmlns:doc="http://www.mulesoft.org/schema/mule/documentation"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd">
+	<http:listener-config name="HTTP_Listener_config" doc:name="HTTP Listener config" doc:id="f1cb9e81-8075-4931-a0ab-9868af95b28e" >
+		<http:listener-connection host="0.0.0.0" port="8081" />
+	</http:listener-config>
+	<http:request-config name="HTTP_Request_configuration" doc:name="HTTP Request configuration" doc:id="9f3394b9-5090-4c0f-86aa-bd40a6068025" />
+	<flow name="error-handlingFlow" doc:id="a5c65ca0-546c-4de9-a4f4-3f1dd235fc8b" >
+		<http:listener doc:name="Listener" doc:id="b72b259e-a3f8-4068-9003-4fc0a37eaaf7" config-ref="HTTP_Listener_config" path="/errorcon">
+			<http:error-response >
+				<http:body ><![CDATA[#[payload]]]></http:body>
+			</http:error-response>
+		</http:listener>
+		<set-payload value='#["Before Http Request"]' doc:name="Before Http Request" doc:id="4366ed2f-3695-43b0-be06-00579656f7ff" />
+		<http:request method="GET" doc:name="Request" doc:id="2b5de96d-1c71-4c36-9d0c-f676334ba041" config-ref="HTTP_Request_configuration" url="cdd.sdsd.com"/>
+		<set-payload value='#["After Http Request"]' doc:name="After Http Request" doc:id="705c7fa2-f448-462c-9624-1b6336f66b8e" />
+		<error-handler>
+			<on-error-continue enableNotifications="true" logException="true" doc:name="On Error Continue" doc:id="3c985806-86c7-43cd-b846-7624496ed6ce" type="HTTP:CONNECTIVITY">
+				<set-payload value='#["Inside On-Error-Continue block"]' doc:name="Set Payload" doc:id="e5c98e82-a844-4e5c-bf0b-7da0f93bcb5d" />
+				<logger level="INFO" doc:name="Logger" doc:id="be51bf71-60aa-4955-b72b-f3b654ffc65e" />
+			</on-error-continue>
+		</error-handler>
+	</flow>
+	<flow name="error-handlingFlow1" doc:id="92a958b8-c46a-45ec-b0d3-9f2b878da407" >
+		<http:listener doc:name="Listener" doc:id="07f986a9-d8a8-4e2c-b9ad-cff2c96ec3b0" config-ref="HTTP_Listener_config" path="/errorpro" >
+			<http:error-response >
+				<http:body ><![CDATA[#[payload]]]></http:body>
+			</http:error-response>
+		</http:listener>
+		<set-payload value='#["Before Http Request"]' doc:name="Before Http Request" doc:id="2cf921fa-3af6-431f-8c1b-3c7ccfb91d8e" />
+		<http:request method="GET" doc:name="Request" doc:id="0c9fdb5e-91ae-4902-a35f-3ee18b7864f1" config-ref="HTTP_Request_configuration" url="cdd.sdsd.com" />
+		<set-payload value='#["After Http Request"]' doc:name="After Http Request" doc:id="2def3e65-fe3e-4797-b7f9-0300c919fa2e" />
+		<error-handler >
+			<on-error-propagate enableNotifications="true" logException="true" doc:name="On Error Propagate" doc:id="2c46d958-8fc3-47db-be9d-430f27f434d0" >
+				<set-payload value='#["Inside On-Error-Propagate block"]' doc:name="Set Payload" doc:id="8e4f1bf5-bab7-489e-bd58-f3d0aa24784f" />
+				<logger level="INFO" doc:name="Logger" doc:id="2937132c-32ae-4b4a-9ba8-b2b135e96b4f" />
+			</on-error-propagate>
+		</error-handler>
+	</flow>
+</mule>

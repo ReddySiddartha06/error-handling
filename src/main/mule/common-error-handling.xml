@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:http="http://www.mulesoft.org/schema/mule/http" xmlns="http://www.mulesoft.org/schema/mule/core"
+	xmlns:doc="http://www.mulesoft.org/schema/mule/documentation"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd">
+	<error-handler name="common-error-handlingError_Handler" doc:id="92bb6889-9501-46eb-bb8f-4bca4cf3d19a" >
+		<on-error-continue enableNotifications="true" logException="true" doc:name="On Error Continue" doc:id="00a47f8e-b8e9-4614-9836-228ea1776c0d" type="HTTP:CONNECTIVITY, HTTP:FORBIDDEN">
+			<set-payload value='#["Handled in global"]' doc:name='"Handled in global"' doc:id="e86f62f9-72a8-4011-8c93-48f542f0edf5" />
+		</on-error-continue>
+		<on-error-propagate enableNotifications="true" logException="true" doc:name="On Error Propagate" doc:id="e80b986a-3f8a-41ef-8765-a9f737f77e93" type="HTTP:CONNECTIVITY, HTTP:FORBIDDEN">
+			<set-payload value='#["Handled in global"]' doc:name='"Handled in global"1' doc:id="b098e974-7fbc-4e7a-98e8-3bfe49cb9fbb" />
+		</on-error-propagate>
+	</error-handler>
+</mule>

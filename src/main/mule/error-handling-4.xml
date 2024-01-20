@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:http="http://www.mulesoft.org/schema/mule/http" xmlns="http://www.mulesoft.org/schema/mule/core"
+	xmlns:doc="http://www.mulesoft.org/schema/mule/documentation"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd">
+	<flow name="error-handling-4Flow" doc:id="68b914fa-23d3-4018-8475-db232177dc54" >
+		<http:listener doc:name="Listener" doc:id="86b63136-7405-4ab5-b532-fa09ab87190d" config-ref="HTTP_Listener_config" path="/error4pro" />
+		<set-payload value='#["Before Http Request"]' doc:name="Before Http Request" doc:id="6bd207e4-f205-4831-afc7-14c7d2cb19f5" />
+		<flow-ref doc:name="error-handling-4Flow1" doc:id="5fadfd41-4fbc-40dd-af74-fbf383a476dc" name="error-handling-4Flow1" />
+		<set-payload value='#["Success"]' doc:name="Success" doc:id="23bb4100-4a90-48a2-bff7-673722965983" />
+		<error-handler >
+			<on-error-propagate enableNotifications="true" logException="true" doc:name="On Error Propagate" doc:id="5c6bd9fd-6d9c-4c68-8c61-a1190ac5899e" type="ANY" >
+				<set-payload value='#["Inside Main Error Handling"]' doc:name='"Inside Main Error Handling"' doc:id="9deb9951-3ae6-4d77-8a1d-36f69499242c" />
+				<logger level="INFO" doc:name="Logger" doc:id="5f0d957a-07dc-4347-b6ec-d10f4aae48a5" />
+			</on-error-propagate>
+		</error-handler>
+	</flow>
+	<flow name="error-handling-4Flow1" doc:id="1542c4dd-110f-46c0-a299-cfe7a80c57bd" >
+		<try doc:name="Try" doc:id="a3ff28b8-2e33-49f3-a7f4-8e6acc42e66a" >
+			<http:request method="GET" doc:name="Request" doc:id="dc292aac-16be-4175-8f5b-e0d17bba94de" config-ref="HTTP_Request_configuration" url="cdd.sdsd.com" />
+			<set-payload value='#["After Http Request in private Flow"]' doc:name='"After Http Request in private Flow"' doc:id="3144020a-3437-4ca7-91c4-195ff5d58dcd" />
+			<error-handler >
+				<on-error-propagate enableNotifications="true" logException="true" doc:name="On Error Propagate" doc:id="e2197cfc-e2ce-410f-933b-78e74d3c0b77" >
+					<set-payload value='#["Error Handled in Try block"]' doc:name='"Error Handled in Try block"' doc:id="9516c560-917e-4d33-8cc4-9b6938b11d2c" />
+				</on-error-propagate>
+			</error-handler>
+		</try>
+		<set-payload value='#["Success in Private flow"]' doc:name='"Success in Private flow"' doc:id="e3457ab4-7798-4313-b12e-ed631aeafba3" />
+		<error-handler >
+			<on-error-continue enableNotifications="true" logException="true" doc:name="On Error Continue" doc:id="40a0d642-a2eb-4560-bc8a-256e04546fb5" type="ANY" >
+				<set-payload value='#["Inside Private Error Handling"]' doc:name='"Inside Private Error Handling"' doc:id="ff5f442e-4738-4943-8a5b-2b3f6446a9df" />
+				<logger level="INFO" doc:name="Logger" doc:id="131a7c16-9b65-4d21-bed5-2fa547faa609" />
+			</on-error-continue>
+		</error-handler>
+	</flow>
+</mule>
